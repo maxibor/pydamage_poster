@@ -7,7 +7,7 @@ from fancy_cache import fancy_cache
 import time
 
 
-@fancy_cache(unique_to_session=True)
+@fancy_cache(unique_to_session=True, ttl=600, suppress_st_warning=True)
 def generate_ancient_data():
 
     res = {}
@@ -36,7 +36,7 @@ def generate_ancient_data():
     return res
 
 
-@fancy_cache(unique_to_session=True)
+@fancy_cache(unique_to_session=True, ttl=600, suppress_st_warning=True)
 def pydamage_guess(damage, mut_count, conserved_count):
     from pydamage.model_fit import fit_models
 
@@ -97,7 +97,7 @@ def get_user_input():
     return float(user_input)
 
 
-@st.cache(suppress_st_warning=True)
+@fancy_cache(unique_to_session=True, ttl=600, suppress_st_warning=True)
 def display_result(guess, true_value, pydamage_result, duration):
 
     pydamage_diff = abs(round(pydamage_result["pmax"], 2) - round(true_value, 2))
@@ -131,7 +131,7 @@ And please read further to understand how PyDamage works !
     elif guess_diff > pydamage_diff:
         st.markdown(
             """
-Sorry, PyDamage beat you this time, but you can always try again by clicking the "restart game" button below 😉  
+Sorry, PyDamage beat you this time, but you can always try again by refreshing the page 😉  
 Read further to understand how PyDamage works !
         """
         )
@@ -156,7 +156,7 @@ at guessing the amount of damage shown below ?
     """
     st.markdown(intro, unsafe_allow_html=True)
     run_game()
-    restart_game()
+    # restart_game()
 
 
 def run_game():
