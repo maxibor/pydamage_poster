@@ -27,10 +27,10 @@ def generate_ancient_data():
 
     res["x"] = x
     res["true damage"] = damage_amount
-    res["oberserved damage"] = damage_amount_noisy
+    res["observed damage"] = damage_amount_noisy
     res["seqlen"] = seqlen
     res["nb_c"] = np.random.randint(1000, 10000, seqlen)
-    res["c_to_t"] = np.random.binomial(res["nb_c"], res["oberserved damage"])
+    res["c_to_t"] = np.random.binomial(res["nb_c"], res["observed damage"])
     res["c_to_c"] = res["nb_c"] - res["c_to_t"]
 
     return res
@@ -163,14 +163,14 @@ def run_game():
     d = generate_ancient_data()
     t0 = time.time()
     pydam = pydamage_guess(
-        damage=d["oberserved damage"],
+        damage=d["observed damage"],
         mut_count=d["c_to_t"],
         conserved_count=d["c_to_c"],
     )
     t1 = time.time()
     duration = round((t1 - t0) * 1000, 2)
     df = pd.DataFrame(d)
-    st.line_chart(df.loc[:, "oberserved damage"])
+    st.line_chart(df.loc[:, "observed damage"])
     guess = get_user_input()
     # st.write(guess)
     # st.write(round(d["true damage"][0], 2))
