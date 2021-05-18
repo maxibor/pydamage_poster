@@ -73,7 +73,7 @@ def print_header():
 def print_title():
     title = """# PyDamage: automated ancient damage identification and estimation for contigs in ancient DNA de novo assembly
 
-### Maxime Borry<sup>1*</sup>, Alexander Hübner<sup>1,2</sup>, A.B. Rohrlach<sup>3,4</sup>, Christina Warinner<sup>1,2,5</sup>
+### [Maxime Borry](https://twitter.com/notmaxib)<sup>1*</sup>, [Alexander Hübner](https://twitter.com/alexhbnr)<sup>1,2</sup>, [A.B. Rohrlach](https://twitter.com/BRohrlach)<sup>3,4</sup>, [Christina Warinner](https://twitter.com/twarinner?lang=en)<sup>1,2,5</sup>
 
 <sup>1</sup><sub>Microbiome Sciences Group, Department of Archaeogenetics, Max Planck Institute for the Science of Human History, Jena, Germany, Kahlaische Straße 10, 07445 Jena, Germany</sub>  
 <sup>2</sup><sub>Faculty of Biological Sciences, Friedrich-Schiller University, 07743, Jena, Germany</sub>  
@@ -85,8 +85,11 @@ def print_title():
     st.markdown(title, unsafe_allow_html=True)
 
 
-@fancy_cache(suppress_st_warning=True)
 def flash_talk():
+    jitsi = """
+**Chat with Maxime on [vchat.eva.mpg.de/pydamage_poster](https://vchat.eva.mpg.de/pydamage_poster) - 02/06/2021 - 12:30-15:30 CET **  
+    """
+    st.markdown(jitsi)
     url = "https://youtu.be/jYxsKQznAuY"
     with st.beta_expander("Watch the Flash Talk"):
         st.video(url)
