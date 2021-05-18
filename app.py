@@ -85,6 +85,13 @@ def print_title():
     st.markdown(title, unsafe_allow_html=True)
 
 
+@fancy_cache(suppress_st_warning=True)
+def flash_talk():
+    url = "https://youtu.be/jYxsKQznAuY"
+    with st.beta_expander("Watch the Flash Talk"):
+        st.video(url)
+
+
 def get_user_input():
     user_input = st.slider(
         "Damage proportion on 5' end",
@@ -137,7 +144,10 @@ Read further to understand how PyDamage works !
         )
     with st.beta_expander("See details"):
         st.markdown(
-            f"""#### Details of data used for PyDamage computation:
+            f"""
+For the purpose of this poster, simulated data were simulated using Numpy, with parameters picked randomly.  
+The code for this simulation is available [here](https://github.com/maxibor/pydamage_poster/blob/68289d18f3df784987419392f4f89a0c3d014232/app.py#L11)
+#### Details of data used for PyDamage computation:
 - Number of "C" sites: {pydamage_result["nb_c"]}
 - Out of these, number of "C to T" substitution events used for damage estimation: {pydamage_result["c_to_t"]}
 
@@ -307,6 +317,7 @@ if __name__ == "__main__":
     # st.caching.clear_cache()
     print_header()
     print_title()
+    flash_talk()
     game_intro()
     introduction()
     methods()
