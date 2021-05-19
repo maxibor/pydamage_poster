@@ -90,7 +90,7 @@ def flash_talk():
 **Chat with Maxime on [vchat.eva.mpg.de/pydamage_poster](https://vchat.eva.mpg.de/pydamage_poster) - 02/06/2021 - 12:30-15:30 CET **  
     """
     st.markdown(jitsi)
-    url = "https://youtu.be/jYxsKQznAuY"
+    url = "https://youtu.be/_ccyeKn3wQ4"
     with st.beta_expander("Watch the Flash Talk"):
         st.video(url)
 
@@ -253,8 +253,8 @@ We tested PyDamage on simulated data, varying the coverage, GC content, amount o
 **d** Nine coverage bins from which the exact coverage was sampled by randomly drawing a number from the uniform distribution defining the bin. **e** Nine contig length bins from which the exact contig length was sampled by randomly drawing a number from the uniform distribution defining the bin.
 
 
-After different Generalized Linear Model (GLM), 
-and selecting the best performing model using balanced accuracy and Nagelkerke’s $R^2$, 
+After fitting different Generalized Linear Models (GLMs),
+ and selecting the best performing model using AUC, F1 score, and Nagelkerke’s $R^2$, 
 we found that **only coverage, amount of damage, and reference length** greatly affected the performance of PyDamage.  
 
 Thanks to this GML model, we were also able to provide the user with an estimation of how accurate a PyDamage prediction can be (figure 3).
