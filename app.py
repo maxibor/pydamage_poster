@@ -1,4 +1,6 @@
 import streamlit as st
+import streamlit_analytics
+import os
 import numpy as np
 import pydamage
 import pandas as pd
@@ -87,7 +89,7 @@ def print_title():
 
 def flash_talk():
     jitsi = """
-**Chat with Maxime on [vchat.eva.mpg.de/pydamage_poster](https://vchat.eva.mpg.de/pydamage_poster) - 02/06/2021 - 12:30-15:30 CET **  
+**Chat with Maxime on [jitsi1.inviteo.com/ISBA9-2-63370](https://jitsi1.inviteo.com/ISBA9-2-63370) - 02/06/2021 - 12:30-15:30 CET **  
     """
     st.markdown(jitsi)
     url = "https://youtu.be/_ccyeKn3wQ4"
@@ -317,7 +319,8 @@ def references():
 
 
 if __name__ == "__main__":
-    # st.caching.clear_cache()
+    pwd = os.environ.get("STAT_PASSWORD")
+    streamlit_analytics.start_tracking()
     print_header()
     print_title()
     flash_talk()
@@ -327,3 +330,7 @@ if __name__ == "__main__":
     results()
     conclusion()
     references()
+    if pwd:
+        streamlit_analytics.stop_tracking(unsafe_password=pwd)
+    else:
+        streamlit_analytics.stop_tracking()
