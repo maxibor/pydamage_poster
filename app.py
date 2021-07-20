@@ -225,7 +225,7 @@ def methods():
     - the parameter $n$ is the number of *C* sites at each position
     - the parameter $p$ is estimated at each position by fitting two models to observed CtoT transitions data, with least square optimization.  
         - a null model (no damage), that assumes a uniform rate of rate of C to T substitutions (figure 1, green line)  
-        - a damage model, that assumes a decreasing rate of C to T substitutions (figure 2, red line)  
+        - a damage model, that assumes a decreasing rate of C to T substitutions (figure 1, red line)  
 
 <img src="https://raw.githubusercontent.com/maxibor/pydamage_poster/master/img/ridgeplot.png" alt="Pydamage logo" width="100%">
 
@@ -238,6 +238,55 @@ def methods():
 
     """
     st.markdown(methods, unsafe_allow_html=True)
+    with st.beta_expander("Show me the maths"):
+        maths = """
+        For each read mapping to each reference sequence $j$, 
+        we count the number of apparent C $\\rightarrow$ T transitions at each position which is $i$ bases from the 5' terminal end, 
+        $i \in \{0,1,\cdots,k\}$, denoted $N_i^j$ (by default, we set $k$=35). 
+        Similarly we denote the number of observed conserved C $\\rightarrow$ C sites $M_i^j$, thus 
+
+
+        $${M}^j =  \left(M_0^j, \cdots,M_k^j\\right)$$ and $${N}^j =  \left(N_0^j, \cdots,N_k^j\\right)$$
+
+        Finally, we calculate the proportion of C $\\rightarrow$ T transitions occurring at each position, denoted $p_i^j$, in the following way:
+
+        $$\hat{p}^j_i = \\frac{N_i^j}{M_i^j+N_i^j}$$
+
+        For $D_i$, the event that we observe a C $\rightarrow$ T transition $i$ bases from the terminal end, 
+        we define two models: a null model $\mathcal{M}_0$(equation 1) which assumes that damage is 
+        independent of the position from the 5' terminal end, and a damage model $\mathcal{M}_1$ (equation 2)
+        which assumes a decreasing probability of damage the further a the position from the 5' terminal end. 
+        For the damage model, we re-scale the curve to the interval defined by parameters $[d^j_{pmin}, d^j_{pmax}]$.
+
+
+        $$P_0\left(D_i \\big\\vert p_0,j \\right) = p_0 ={}^{\mathcal{M}_0}\pi^j$$ (Equation 1)
+
+        $$P_1\\left( D_i \\big\\vert p^j_d, d^j_{pmin}, d^j_{pmax}, j \\right) = \\frac{\\Big(\\big[(1-p^j_d)^i\\times p^j_d \\big] - \\hat{p}_{min}^j\\Big)}{\\hat{p}_{max}^j - \\hat{p}_{min}^j} \\times(d^j_{pmax} - d^j_{pmin})+d^j_{pmin} = {}^{\mathcal{M}_1}\pi^j_i$$ (Equation 2)
+
+        where 
+
+        $$\\hat{p}_{min}^j(p_j^d) = (1-p^j_d)^k\\times p^j_d \\:\\:\\:\\: \\text{and} \\:\\:\\:\\:  \\hat{p}_{max}^j(p_j^d) = (1-p^j_d)^0 \\times p^j_d$$
+
+
+        We optimize the parameters of both models using ${p}^j_i$, by minimising the sum of squares, giving us the optimized set of parameters
+
+        $$\\hat{\\boldsymbol{\\theta}}_{0} = \\left\\{ \\hat{p}_0 \\right\\} \\:\\:\\:\\: \\text{and} \\:\\:\\:\\: \\hat{\\boldsymbol{\\theta}}_{1} = \\left\\{ \\hat{p}_d^j, \\hat{d}^j_{pmin},\\hat{d}^j_{pmax} \\right\\}$$
+
+        for $\mathcal{M}_0$ and $\mathcal{M}_{1}$ respectively. Under $\mathcal{M}_0$ and $\mathcal{M}_1$ we have the following likelihood functions
+
+        $$\\mathcal{L}_0\\Big( \\hat{\\boldsymbol{\\theta}}_{0} \\Big\\vert   \\boldsymbol{M}^j, \\boldsymbol{N}^j   \\Big) = \\prod_{i=0}^k {M_i^j+N_i^j \\choose N_i^j} \\left( {}^{\\mathcal{M}_0}\\hat{\\pi}^{j} \\right)^{ N_i^j} \\left(1- {}^{\\mathcal{M}_0}\\hat{\\pi}^j \\right)^{ M_i^j}$$  
+        $$\\mathcal{L}_1\\Big( \\hat{\\boldsymbol{\\theta}}_{1} \\Big\\vert   \\boldsymbol{M}^j, \\boldsymbol{N}^j  \\Big) = \\prod_{i=0}^k {M_i^j+N_i^j \\choose N_i^j} \\left( {}^{\\mathcal{M}_1}\\hat{\\pi}_i^j \\right)^{N_i^j} \\left(1- {}^{\\mathcal{M}_1}\\hat{\\pi}_i^{1,j} \\right)^{M_i^j}$$
+
+        where ${}^{\mathcal{M}_0}\hat{\pi}^j$ and ${}^{\mathcal{M}_1}\hat{\pi}_i^j$ are calculated using equations 1 and 2. 
+        Note that if $d_{pmax}^j = d_{pmin}^j = p_0$, then ${}^{\mathcal{M}_0}\pi^j = {}^{\mathcal{M}_1}\pi_i^j$ for $i=0,\cdots,k$. 
+        Hence to compare the goodness-of-fit for models $\mathcal{M}_0$ and $\mathcal{M}_1$ for each reference, we calculate a likelihood-ratio test-statistic of the form
+
+        $$\\lambda_j = -2\\;\\text{ln} \\left[\\frac{\\mathcal{L}_0\\Big( \\hat{\\boldsymbol{\\theta}}_{0} \\Big\\vert   \\boldsymbol{M}^j, \\boldsymbol{N}^j   \\Big)}{\\mathcal{L}_1\\Big( \\hat{\\boldsymbol{\\theta}}_{1} \\Big\\vert   \\boldsymbol{M}^j, \\boldsymbol{N}^j   \\Big)} \\right]$$
+
+        from which we compute a p-value using the fact that $\lambda_j \sim \chi^2_2$, asymptotically. 
+        Finally, we adjust the p-values for multiple testing of all references using the Benjamini-Hochberg procedure.
+        """
+        st.markdown(maths, unsafe_allow_html=True)
 
 
 def results():
