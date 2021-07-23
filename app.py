@@ -88,11 +88,7 @@ def print_title():
 
 
 def flash_talk():
-    jitsi = """
-**Chat with Maxime on [jitsi1.inviteo.com/ISBA9-2-63370](https://jitsi1.inviteo.com/ISBA9-2-63370) - 02/06/2021 - 12:30-15:30 CET **  
-    """
-    st.markdown(jitsi)
-    url = "https://youtu.be/_ccyeKn3wQ4"
+    url = "https://youtu.be/Y7l0FYKVKwk"
     with st.beta_expander("Watch the Flash Talk"):
         st.video(url)
 
