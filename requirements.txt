@@ -1,0 +1,7 @@
+numpy==1.20.2
+pandas==1.2.4
+pip==21.1.1
+python==3.9.4
+streamlit==0.81.1
+pydamage==0.62
+streamlit-analytics
